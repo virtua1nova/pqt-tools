@@ -12,7 +12,7 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
-  base: './',
+  base: '/pqt-tools/',
   build: {
     outDir: 'docs'
   },

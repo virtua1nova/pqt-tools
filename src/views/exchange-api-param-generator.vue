@@ -119,10 +119,10 @@ function generate() {
     let _params = "";
     const _copy = { ...paramsParsed };
     _copy[AMOUNT] = _amount;
-    for (const key in paramsParsed) {
+    for (const key in _copy) {
         if (key === COST) {
             const _cost = [];
-            for (const item of paramsParsed[key]) {
+            for (const item of _copy[key]) {
                 const obj = {
                     ...item
                 };
@@ -133,7 +133,7 @@ function generate() {
             _params += `${key}=${encodeURIComponent(JSON.stringify(_cost))}&`;
         }
         else {
-            _params += `${key}=${paramsParsed[key]}&`;
+            _params += `${key}=${_copy[key]}&`;
         }
     }
     newParams.value = _params.slice(0, -1);

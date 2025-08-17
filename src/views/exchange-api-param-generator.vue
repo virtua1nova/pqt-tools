@@ -117,6 +117,8 @@ function generate() {
         return;
     }
     let _params = "";
+    const _copy = { ...paramsParsed };
+    _copy[AMOUNT] = _amount;
     for (const key in paramsParsed) {
         if (key === COST) {
             const _cost = [];

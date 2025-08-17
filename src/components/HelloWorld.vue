@@ -10,9 +10,9 @@ defineProps({
 <template>
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
-    <h3>
-      帮助完成QT相关数据处理的小工具集合(有羊毛可薅时，尽管呼，随叫随到)。
-    </h3>
+    <div>
+      用于帮助完成QT相关数据处理的小工具集合(有羊毛可薅时，尽管呼，随叫随到)。
+    </div>
   </div>
 </template>
 

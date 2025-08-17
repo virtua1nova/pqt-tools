@@ -5,12 +5,16 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header style="margin-bottom: 2rem;">
-    <img alt="Vue logo" class="logo" style="border-radius: 20;" src="@/assets/644829316013752339.webp" width="125" height="125" />
+    <img alt="Vue logo" class="logo" style="border-radius: 20px;" src="@/assets/644829316013752339.webp" width="125" height="125" />
     <div class="wrapper">
-      <HelloWorld msg="吉赛尔的工具库" />
+      <HelloWorld msg="吉赛尔的工具箱" />
       <nav>
         <RouterLink to="/">主页</RouterLink>
         <RouterLink to="/about">关于</RouterLink>
+        <a href="https://github.com/virtua1nova/pqt-tools" target="_blank" style="position: relative;">
+          <img src="@/assets/github-mark.png" alt="" width="24" height="24" style="position: absolute; top: 50%; transform: translateY(-50%); left: 1rem;">
+          <span style="margin-left: 29px;">Github</span>
+        </a>
       </nav>
     </div>
   </header>

@@ -1,0 +1,37 @@
+<script setup>
+import Tool from './Tool.vue'
+import DocumentationIcon from './icons/IconDocumentation.vue'
+import ToolingIcon from './icons/IconTooling.vue'
+// import EcosystemIcon from './icons/IconEcosystem.vue'
+// import CommunityIcon from './icons/IconCommunity.vue'
+// import SupportIcon from './icons/IconSupport.vue'
+// import { RouterLink, RouterView } from 'vue-router'
+// const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
+</script>
+
+<template>
+  <Tool>
+    <template #icon>
+      <ToolingIcon />
+    </template>
+    
+    <template #heading>
+      <RouterLink to="/exchange-api-param-generator">兑换参数转换器</RouterLink>
+    </template>
+    <div style="text-indent: 2em;">
+      用于自定义兑换相关参数；提供解析(通常会编码)、编辑、生成参数的功能。比方说，qt中存在一些可利用的漏洞，将原始抓包数据替换为自定义参数来达到超上限兑换物品的效果。
+    </div>
+  </Tool>
+  <Tool>
+    <template #icon>
+      <DocumentationIcon />
+    </template>
+    
+    <template #heading>
+      <RouterLink to="/request-interceptor">Request Interceptor</RouterLink>
+    </template>
+    <div style="text-indent: 2em;">
+      一个简易的请求拦截器，可用于获取抓包数据，类似的工具有Charles、Fiddler、浏览器开发者等。
+    </div>
+  </Tool>
+</template>

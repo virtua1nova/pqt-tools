@@ -1,32 +1,34 @@
 <template>
-    <div>
+    <div style="display: flex; flex-direction: column; justify-content: center; padding: 2em 0;">
         <p style="margin-bottom: 10px; font-size: 18px; font-weight: 500;">兑换参数转换器</p>
-        <div style="margin-bottom: 10px">
+
+        <div style="margin-bottom: 5px; color: rgb(133, 84, 84); font-size: 14px;">基本使用方法: 解析 -> 生成 -> 复制 -> 粘贴[到终端] -> 执行</div>
+        <div style="margin-bottom: 5px">
             <div style="margin-bottom: 5px">
-                <label for="params">
-                    抓包参数：
-                    <input
-                        v-model="params"
-                        type="text"
-                        placeholder="请输入"
-                        style="width: 240px; margin-right: 10px;"
-                        id="params"
-                    />
-                    <button @click="parse">解析</button>
-                    <span v-if="parsed">
-                        成功, 当前兑换数量为: {{paramsParsed[AMOUNT]}}
-                    </span>
+                <label for="command" style="display: inline-block; margin-bottom: 5px;">
+                    抓包参数:
                 </label>
+                <div style="display: flex; align-items: flex-start;">
+                    <textarea v-model="command" placeholder="请输入" id="command" style="width: 300px; margin-right: 10px;" rows="4" />
+                    <button @click="parse" style="margin-right: 10px;">解析</button>
+                    <span v-if="parsed">
+                        成功, 当前兑换数量为: {{amount}}
+                    </span>
+                </div>
             </div>
             <div>
-                <label for="amount">
-                    兑换数量：
-                    <input type="text" placeholder="请输入" id="amount" style="margin-right: 10px;" v-model="amount">
-                    <button @click="generate" style="margin-right: 10px;">生成</button><button @click="copy">复制</button>
+                <label for="newAmount" style="display: inline-block; margin-bottom: 5px;">
+                    兑换数量:
                 </label>
-                <div style="word-break: break-all; font-size: 13px; padding-left: 10px; color: #855454; margin-top: 5px;">
-                    <div v-text="newParams"></div>
+                <div style="display: flex; align-items: flex-start;">
+                    <input type="text" placeholder="请输入" id="newAmount" style="margin-right: 10px; height: 24px;" v-model.number="newAmount">
+                    <button @click="generate" style="margin-right: 10px;">生成</button>
+                    <button @click="copy" style="margin-right: 10px;">复制</button>
+                    <button @click="clear">清除</button>
                 </div>
+            </div>
+            <div style="word-break: break-all; font-size: 13px; color: #855454; margin-top: 5px;">
+                <div v-html="newCommand"></div>
             </div>
         </div>
 
@@ -46,78 +48,97 @@
             </div>
             <div>-H 'X-QOOKIA-PACK: 6a18fc16671e92d6a20655bd74ba1fd6c04bb4d1' \</div>
             <div>...</div>
-            <div style="word-break: break-all">
-                <div>
-                --data-raw
-                'amount=2&setting_id=539&cost=%5B...%5D'
-                </div>
-            </div>
-            </div>
-        <div>
-        其中，"--data-raw"一行就是本工具的目标数据，将其复制到输入框内即可(从amount开始，不要引号)。
+            <div>--data-raw 'amount=2&setting_id=539&cost=%5B...%5D'</div>
         </div>
+        <span>将其复制到输入框内即可。</span>
     </div>
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
 
-const params = ref("");
+const command = ref("");
 const parsed = ref(false);
 const amount = ref("");
-const paramsParsed = reactive({});
-const newParams = ref("");
+const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null});
+
+const newCommand = ref("");
+const newAmount = ref("");
 
 const COST = "cost";
 const AMOUNT = "amount";
+const TYPE1 = "curl";
+const TYPE2 = "powerShell";
+
+/**
+ * curl格式
+ * @param {String} _params
+ * @param {{type, part1, part2, part3}} commandParsed
+ */
+function curlParser(command, commandParsed) {
+    const key = "--data-raw";
+    const index = command.lastIndexOf(key) + key.length;
+    commandParsed.type = TYPE1;
+    commandParsed.part1 = command.slice(0, index);
+    commandParsed.part2 = command.slice(index).trim().slice(1, -1);
+}
+
+// powerShell格式
+function powerShellParser(command, commandParsed) {
+}
 
 function parse() {
-    let _params = params.value;
-    if (!_params) {
+    let _command = command.value;
+    if (!_command) {
         window.alert("请输入抓包参数");
         return;
     }
-    if (_params.startsWith("'") || _params.startsWith("\""))  {
-        _params = _params.slice(1);
+    if (_command.startsWith(TYPE1)) {
+        curlParser(_command, commandParsed);
     }
-    if (_params.endsWith("'") || _params.endsWith("\"")) {
-        _params = _params.slice(0, -1);
+    else if (_command.startsWith("Invoke-WebRequest")) {
+        powerShellParser(_command, commandParsed);
     }
-    const parts = _params.split("&");
-    parts.sort();
+    if (!commandParsed.part1 || !commandParsed.part2) {
+        return window.alert('解析失败, 参数格式是否正确?');
+    }
+    const params = commandParsed.part2.split("&");
+    params.sort();
     const map = {};
-    for (const part of parts) {
-        const [a, b] = part.split("=");
-        let _b = decodeURIComponent(b);
+    for (const item of params) {
+        let [a, b] = item.split("=");
         if (a === COST) {
-            _b = JSON.parse(_b.replace(/\+/g, ""));
-
-            for (const item of _b) {
+            b = decodeURIComponent(b);
+            b = JSON.parse(b.replace(/\+/g, ""));
+            for (const item of b) {
                 item.unit = item.value / map[AMOUNT];
             }
         }
-        map[a] = _b;
+        map[a] = b;
     }
     if (!map[AMOUNT] && !map[COST]) {
         window.alert("请输入正确的抓包参数");
         return;
     }
-    Object.assign(paramsParsed, map);
+    commandParsed.part3 = map;
     parsed.value = true;
+    amount.value = map[AMOUNT];
 }
 
 function generate() {
-    let _amount = amount.value;
+    let _amount = newAmount.value;
     if (!_amount) {
         window.alert("请输入兑换数量");
         return;
     }
-    if (!/\d+/.test(_amount) || +amount.value < 1) {
+    // 不要小数
+    _amount = _amount >> 0;
+    if (_amount < 1) {
         window.alert("请输入正确的兑换数量");
         return;
     }
     let _params = "";
-    const _copy = { ...paramsParsed };
+    const _copy = { ...commandParsed.part3 };
     _copy[AMOUNT] = _amount;
     for (const key in _copy) {
         if (key === COST) {
@@ -126,7 +147,7 @@ function generate() {
                 const obj = {
                     ...item
                 };
-                obj.value = item.unit * +amount.value;
+                obj.value = item.unit * _amount;
                 delete obj.unit;
                 _cost.push(obj);
             }
@@ -136,13 +157,17 @@ function generate() {
             _params += `${key}=${_copy[key]}&`;
         }
     }
-    newParams.value = _params.slice(0, -1);
+    newCommand.value = `${commandParsed.part1} '${_params.slice(0, -1)}'`;
 }
 
 function copy() {
-    if (newParams.value) {
-        navigator.clipboard.writeText(newParams.value);
+    if (newCommand.value) {
+        navigator.clipboard.writeText(newCommand.value);
         window.alert("复制成功");
     }
+}
+
+function clear() {
+    newCommand.value && (newCommand.value = '');
 }
 </script>

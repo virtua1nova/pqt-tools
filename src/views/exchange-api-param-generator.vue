@@ -1,15 +1,14 @@
 <template>
-    <div style="display: flex; flex-direction: column; justify-content: center; padding: 2em 0;">
+    <div class="container1">
         <p style="margin-bottom: 10px; font-size: 18px; font-weight: 500;">兑换参数转换器</p>
-
         <div style="margin-bottom: 5px; color: rgb(133, 84, 84); font-size: 14px;">基本使用方法: 解析 -> 生成 -> 复制 -> 粘贴[到终端] -> 执行</div>
         <div style="margin-bottom: 5px">
-            <div style="margin-bottom: 5px">
+            <div style="margin-bottom: 5px;">
                 <label for="command" style="display: inline-block; margin-bottom: 5px;">
                     抓包参数:
                 </label>
                 <div style="display: flex; align-items: flex-start;">
-                    <textarea v-model="command" placeholder="请输入" id="command" style="width: 300px; margin-right: 10px;" rows="4" />
+                    <textarea v-model="command" placeholder="请输入" id="command" style="width: 360px; margin-right: 10px;" rows="4" />
                     <button @click="parse" style="margin-right: 10px;">解析</button>
                     <span v-if="parsed">
                         成功, 当前兑换数量为: {{amount}}
@@ -51,6 +50,7 @@
             <div>--data-raw 'amount=2&setting_id=539&cost=%5B...%5D'</div>
         </div>
         <span>将其复制到输入框内即可。</span>
+        <div style="font-size: 13px;">若是PowerShell, 一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...</div>
     </div>
 </template>
 
@@ -68,11 +68,11 @@ const newAmount = ref("");
 const COST = "cost";
 const AMOUNT = "amount";
 const TYPE1 = "curl";
-const TYPE2 = "powerShell";
+const TYPE2 = "PowerShell";
 
 /**
  * curl格式
- * @param {String} _params
+ * @param {String} command
  * @param {{type, part1, part2, part3}} commandParsed
  */
 function curlParser(command, commandParsed) {
@@ -85,8 +85,14 @@ function curlParser(command, commandParsed) {
 
 // powerShell格式
 function powerShellParser(command, commandParsed) {
+    const key = "-Body";
+    const index = command.lastIndexOf(key) + key.length;
+    commandParsed.type = TYPE2;
+    commandParsed.part1 = command.slice(0, index);
+    commandParsed.part2 = command.slice(index).trim().slice(1, -1);
 }
 
+// 假定参数在命令的最后一行
 function parse() {
     let _command = command.value;
     if (!_command) {

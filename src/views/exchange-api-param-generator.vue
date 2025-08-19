@@ -49,7 +49,8 @@
             <div>...</div>
             <div>--data-raw 'amount=2&setting_id=539&cost=%5B...%5D'</div>
         </div>
-        <span>将其复制到输入框内即可。</span>
+        <div>将其复制到输入框内即可。</div>
+        <span style="color: red; font-size: 12px;">(注意一定要包含兑换参数，如"--data-raw", 或"-Body")</span>
         <div style="font-size: 13px;">若是PowerShell, 一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...</div>
     </div>
 </template>
@@ -153,7 +154,7 @@ function generate() {
                 const obj = {
                     ...item
                 };
-                obj.value = item.unit * _amount;
+                obj.value = '' + (item.unit * _amount);
                 delete obj.unit;
                 _cost.push(obj);
             }

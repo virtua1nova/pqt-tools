@@ -1,0 +1,52 @@
+# 这个是成功的请求格式：
+
+curl -X POST 'https://us.nkrpg.com/api/exchange/exchangeItem' \
+  -H 'Host: us.nkrpg.com' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0' \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'X-QOOKIA-DEVICE-TYPE: web' \
+  -H 'X-QOOKIA-DEVICE: ff2116b9-1d71-4bbd-9552-711264292d4d' \
+  -H 'X-QOOKIA-SERVER-PREFIX: UVG' \
+  -H 'X-QOOKIA-USER: UVG0000009756' \
+  -H 'X-QOOKIA-DIGEST: 7af070620de92e5b83459682bd618b2944b952c4' \
+  -H 'X-QOOKIA-PACK: 2bd82d18161c5ed1403d01d04ce6c1cda3037b7f' \
+  -H 'X-QOOKIA-TIME: 1755569559' \
+  -H 'X-QOOKIA-BUILD: 27.0.0.824' \
+  -H 'X-QOOKIA-NKID: 61916215' \
+  -H 'Origin: https://osapi.nutaku.com' \
+  -H 'Referer: https://osapi.nutaku.com/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: cross-site' \
+  --data-raw 'amount=5&cost=%5B%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003815%22%2C%22value%22%3A%22300%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003816%22%2C%22value%22%3A%22150%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003817%22%2C%22value%22%3A%2275%22%7D%5D&setting_id=541'
+
+# 这个是失败的请求格式：
+
+可能是因为某些头部字段：Content-Length；缺少Host
+
+curl 'https://us.nkrpg.com/api/exchange/exchangeItem' \
+  -X POST \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0' \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2' \
+  -H 'Accept-Encoding: gzip, deflate, br, zstd' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'X-QOOKIA-DEVICE-TYPE: web' \
+  -H 'X-QOOKIA-DEVICE: ff2116b9-1d71-4bbd-9552-711264292d4d' \
+  -H 'X-QOOKIA-SERVER-PREFIX: UVG' \
+  -H 'X-QOOKIA-USER: UVG0000009756' \
+  -H 'X-QOOKIA-DIGEST: 7af070620de92e5b83459682bd618b2944b952c4' \
+  -H 'X-QOOKIA-PACK: 2bd82d18161c5ed1403d01d04ce6c1cda3037b7f' \
+  -H 'X-QOOKIA-TIME: 1755569559' \
+  -H 'X-QOOKIA-BUILD: 27.0.0.824' \
+  -H 'X-QOOKIA-NKID: 61916215' \
+  -H 'Content-Length: 341' \
+  -H 'Origin: https://osapi.nutaku.com' \
+  -H 'Connection: keep-alive' \
+  -H 'Referer: https://osapi.nutaku.com/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: cross-site' \
+  --data-raw 'amount=5&cost=%5B%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003815%22%2C%22value%22%3A%22300%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003816%22%2C%22value%22%3A%22150%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003817%22%2C%22value%22%3A%2275%22%7D%5D&setting_id=541'

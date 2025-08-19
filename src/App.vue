@@ -5,7 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header style="height: inherit;">
-    <img alt="Vue logo" class="logo" style="border-radius: 20px;" src="@/assets/644829316013752339.webp" width="125" height="125" />
+    <img alt="烧匕" class="logo" style="border-radius: 20px;" src="@/assets/644829316013752339.webp" width="125" height="125" />
     <div class="wrapper">
       <HelloWorld msg="吉赛尔的工具箱" />
       <nav>

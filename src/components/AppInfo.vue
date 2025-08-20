@@ -4,14 +4,18 @@ defineProps({
     type: String,
     required: true,
   },
+  style1: {
+    type: String,
+    default: ""
+  }
 })
 </script>
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
+    <h1 class="green" :style="style1">{{ msg }}</h1>
     <div>
-      用于帮助完成QT相关数据处理的小工具集合(有羊毛可薅时，尽管呼，随叫随到)。
+      用于帮助完成QT相关数据处理的小工具集合(在有羊毛可薅的地方，尽管呼，随叫随到)。
     </div>
   </div>
 </template>

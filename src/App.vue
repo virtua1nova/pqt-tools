@@ -1,19 +1,22 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import AppInfo from './components/AppInfo.vue'
 </script>
 
 <template>
   <header style="height: inherit;">
-    <img alt="烧匕" class="logo" style="border-radius: 20px;" src="@/assets/644829316013752339.webp" width="125" height="125" />
+    <img alt="烧匕" class="logo" style="box-shadow: 5px 5px 10px #00000063; border-radius: 10px;" src="@/assets/D996CDE7C4D89849804C141664DA2B04.gif" width="133" height="133" />
     <div class="wrapper">
-      <HelloWorld msg="吉赛尔的工具箱" />
+      <AppInfo msg="吉赛尔的工具箱" style1="text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);" />
       <nav>
-        <RouterLink to="/">主页</RouterLink>
+        <RouterLink to="/">
+          <img src="@/assets/644829316013752339.webp" alt="精神支柱" width="24" height="24" style="vertical-align: sub;">
+          <span style="margin-left: 0.5rem;">主页</span>
+        </RouterLink>
         <RouterLink to="/about">关于</RouterLink>
-        <a href="https://github.com/virtua1nova/pqt-tools" target="_blank" style="position: relative;">
-          <img src="@/assets/github-mark.png" alt="" width="24" height="24" style="position: absolute; top: 50%; transform: translateY(-50%); left: 1rem;">
-          <span style="margin-left: 29px;">Github</span>
+        <a href="https://github.com/virtua1nova/pqt-tools" target="_blank">
+          <img src="@/assets/github-mark.png" alt="" width="24" height="24" style="vertical-align: sub;">
+          <span style="margin-left: 0.5rem;">Github</span>
         </a>
       </nav>
     </div>

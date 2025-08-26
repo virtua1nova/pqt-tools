@@ -70,27 +70,55 @@ const COST = "cost";
 const AMOUNT = "amount";
 const TYPE1 = "curl";
 const TYPE2 = "PowerShell";
+const fieldPattern = /[\-]+\w+\s+/;
 
 /**
  * curl格式
  * @param {String} command
- * @param {{type, part1, part2, part3}} commandParsed
+ * @param {{type, part1, part2, part2Parsed, part3}} commandParsed
  */
 function curlParser(command, commandParsed) {
-    const key = "--data-raw";
-    const index = command.lastIndexOf(key) + key.length;
+    let key = "--data-raw";
+    let index = command.lastIndexOf(key);
+
+    if (index === -1) {
+        key = "--data-binary";
+        index = command.lastIndexOf(key);
+    }
+    if (index === -1) {
+        return;
+    }
+    index += key.length
     commandParsed.type = TYPE1;
     commandParsed.part1 = command.slice(0, index);
-    commandParsed.part2 = command.slice(index).trim().slice(1, -1);
+    let part2 = command.slice(index);
+    const result = part2.match(fieldPattern);
+    if (result) {
+        commandParsed.part3 = part2.slice(result.index);
+        part2 = part2.slice(0, result.index);
+    }
+    part2 = part2.trim().slice(1, -1);
+    commandParsed.part2 = part2;
 }
 
 // powerShell格式
 function powerShellParser(command, commandParsed) {
     const key = "-Body";
-    const index = command.lastIndexOf(key) + key.length;
+    let index = command.lastIndexOf(key);
+    if (index === -1) {
+        return;
+    }
+    index += key.length
     commandParsed.type = TYPE2;
     commandParsed.part1 = command.slice(0, index);
-    commandParsed.part2 = command.slice(index).trim().slice(1, -1);
+    let part2 = command.slice(index);
+    const result = part2.match(fieldPattern);
+    if (result) {
+        commandParsed.part3 = part2.slice(result.index);
+        part2 = part2.slice(0, result.index);
+    }
+    part2 = part2.trim().slice(1, -1);
+    commandParsed.part2 = part2;
 }
 
 // 假定参数在命令的最后一行
@@ -127,7 +155,7 @@ function parse() {
         window.alert("请输入正确的抓包参数");
         return;
     }
-    commandParsed.part3 = map;
+    commandParsed.part2Parsed = map;
     parsed.value = true;
     amount.value = map[AMOUNT];
 }
@@ -145,7 +173,7 @@ function generate() {
         return;
     }
     let _params = "";
-    const _copy = { ...commandParsed.part3 };
+    const _copy = { ...commandParsed.part2Parsed };
     _copy[AMOUNT] = _amount;
     for (const key in _copy) {
         if (key === COST) {
@@ -165,6 +193,9 @@ function generate() {
         }
     }
     newCommand.value = `${commandParsed.part1} '${_params.slice(0, -1)}'`;
+    if (commandParsed.part3) {
+        newCommand.value += ` ${commandParsed.part3}`;
+    }
 }
 
 function copy() {
@@ -175,6 +206,14 @@ function copy() {
 }
 
 function clear() {
-    newCommand.value && (newCommand.value = '');
+    if (newCommand.value) {
+        newCommand.value = '';
+    }
+    if (parsed.value) {
+        parsed.value = false;
+    }
+    if (command.value) {
+        command.value = "";
+    }
 }
 </script>

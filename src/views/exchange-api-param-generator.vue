@@ -106,8 +106,10 @@ const description = computed(() => {
 });
 
 onMounted(async () => {
+    loading.value = true;
     await queryExchangeDataConfig();
-    queryExchangeDataList(config);
+    await queryExchangeDataList(config);
+    loading.value = false;
 });
 
 async function refresh() {

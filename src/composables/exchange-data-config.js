@@ -4,7 +4,7 @@ import { reactive } from "vue";
 
 export function useGetExchangeDataConfig() {
     const config = reactive({});
-    async function queryExchangeDataConfig({ force } = {}) {
+    async function queryExchangeDataConfig(force) {
         const date = new Date();
         if (!force) {
             const configStr = localStorage.getItem("exchange-data-config");

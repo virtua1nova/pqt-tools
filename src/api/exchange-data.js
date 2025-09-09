@@ -1,7 +1,8 @@
-// 获取兑换参数列表
+// 获取兑换参数列表；
+// 从配置文件中获取
 export async function getExchangeData(params) {
-    const { sheetId, sheetName = ''} = params;
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzf3AIetwEitGy5t1ORgW2JW5HgMzOHw-kZRM_cQrFny3fGFL9_PcRI3re3T52BghBF/exec";
+    const { sheetId, sheetName = '', deploymentId } = params;
+    const scriptUrl = `https://script.google.com/macros/s/${deploymentId}/exec`;
     let url = `${scriptUrl}?sheetId=${sheetId}&sheetName=${sheetName}`;
     const resp = await fetch(url, {
         method: 'GET',

@@ -105,17 +105,16 @@ const description = computed(() => {
     return descriptions;
 });
 
-onMounted(async () => {
-    loading.value = true;
-    await queryExchangeDataConfig();
-    await queryExchangeDataList(config);
-    loading.value = false;
+onMounted(() => {
+    refresh(false);
 });
 
-async function refresh() {
-    list.value.length = 0;
+async function refresh(force) {
+    if (list.value.length) {
+        list.value.length = 0;
+    }
     loading.value = true;
-    await queryExchangeDataConfig({ force: true });
+    await queryExchangeDataConfig(force);
     await queryExchangeDataList(config);
     loading.value = false;
 }

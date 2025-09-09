@@ -117,7 +117,7 @@ export default {
     },
     // 重试按钮点击
     refresh() {
-      this.$emit("refresh");
+      this.$emit("refresh", true);
     },
     copy(content) {
       if (content) {
@@ -298,8 +298,8 @@ export default {
   background-color: #f1f1f1;
 }
 .data-state img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  /* height: 80px; */
 }
 
 /* 无数据状态 */

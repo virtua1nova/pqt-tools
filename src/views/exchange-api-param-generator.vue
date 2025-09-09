@@ -2,13 +2,17 @@
     <div class="container1">
         <p style="margin-bottom: 10px; font-size: 18px; font-weight: 500;">兑换参数转换器</p>
         <div style="margin-bottom: 5px; color: rgb(133, 84, 84); font-size: 14px;">基本使用方法: 解析 -> 生成 -> 复制 -> 粘贴[到终端] -> 执行</div>
+        <div style="margin-bottom: 5px; color: red; font-size: 12px;">注: 生成的命令不要直接复制, 而应该点击[复制]按钮, 否则会因换行符没复制出来, 导致命令执行失败</div>
         <div style="margin-bottom: 5px">
             <div style="margin-bottom: 5px;">
                 <label for="command" style="display: inline-block; margin-bottom: 5px;">
-                    抓包参数:
+                    抓包数据:
                 </label>
-                <div style="display: flex; align-items: flex-start;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 5px;">
                     <textarea v-model="command" placeholder="请输入" id="command" style="width: 360px; margin-right: 10px;" rows="4" />
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <button @click="dialogVisible = true" style="margin-right: 10px;">浏览参数</button>
                     <button @click="parse" style="margin-right: 10px;">解析</button>
                     <span v-if="parsed">
                         成功, 当前兑换数量为: {{amount}}
@@ -51,12 +55,23 @@
         </div>
         <div>将其复制到输入框内即可。</div>
         <span style="color: red; font-size: 12px;">(注意一定要包含兑换参数，如"--data-raw", 或"-Body")</span>
-        <div style="font-size: 13px;">若是PowerShell, 一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...</div>
+        <div style="font-size: 13px;">若是PowerShell, 则一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...</div>
+        <SimpleDialog
+            v-model:visible="dialogVisible"
+            title="兑换参数对照表"
+            :data="list"
+            :description="description"
+            @refresh="refresh"
+            :loading="loading"
+        />
     </div>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
+import { useGetExchangeData } from "../composables/exchange-data";
+import { useGetExchangeDataConfig } from "../composables/exchange-data-config";
+import SimpleDialog from "../components/SimpleDialog.vue";
 
 const command = ref("");
 const parsed = ref(false);
@@ -65,12 +80,43 @@ const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null
 
 const newCommand = ref("");
 const newAmount = ref("");
+const dialogVisible = ref(false);
+const loading = ref(false);
 
 const COST = "cost";
 const AMOUNT = "amount";
 const TYPE1 = "curl";
 const TYPE2 = "PowerShell";
 const fieldPattern = /[\-]+\w+\s+/;
+
+const { config, queryExchangeDataConfig } = useGetExchangeDataConfig();
+const { list, queryExchangeDataList, spreadsheetSource } = useGetExchangeData();
+
+const descriptions = [
+    "如果没有看到想要的兑换参数的话, 可前往在线表格帮忙填写",
+    "使用方法: 复制 -> 拼接参数 -> 解析"
+];
+const description = computed(() => {
+    if (spreadsheetSource.spreadsheetUrl) {
+        const copying = [...descriptions];
+        copying[0] += `: ${spreadsheetSource.spreadsheetUrl}`
+        return copying;
+    }
+    return descriptions;
+});
+
+onMounted(async () => {
+    await queryExchangeDataConfig();
+    queryExchangeDataList(config);
+});
+
+async function refresh() {
+    list.value.length = 0;
+    loading.value = true;
+    await queryExchangeDataConfig({ force: true });
+    await queryExchangeDataList(config);
+    loading.value = false;
+}
 
 /**
  * curl格式

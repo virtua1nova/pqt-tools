@@ -21,13 +21,12 @@
       </div>
 
       <!-- 错误状态 -->
-      <!-- <div v-else-if="error" class="modal-body error-state">
+      <div v-else-if="error" class="modal-body error-state">
         <p class="error-text">❌ {{ error }}</p>
-        <button @click="retryFetch">重试</button>
-      </div> -->
-
+        <button @click="refresh">重试</button>
+      </div>
       <!-- 成功状态：显示数据 -->
-      <div v-if="data && data.length > 0" class="modal-body data-state">
+      <div v-else-if="data && data.length > 0" class="modal-body data-state">
         <table>
           <thead>
             <tr>
@@ -253,7 +252,7 @@ export default {
   background-color: #e74c3c;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 20px;
   border-radius: 4px;
   cursor: pointer;
 }

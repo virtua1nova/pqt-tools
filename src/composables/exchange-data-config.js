@@ -6,6 +6,12 @@ export function useGetExchangeDataConfig() {
     const config = reactive({});
     async function queryExchangeDataConfig(force) {
         const date = new Date();
+        // await new Promise((resolve) => {
+        //     setTimeout(() => {
+        //         resolve();
+        //     }, 4000);
+        // });
+        // throw new Error("1111222");
         if (!force) {
             const configStr = localStorage.getItem("exchange-data-config");
             let _config = configStr ? JSON.parse(configStr) : null;

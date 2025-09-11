@@ -63,6 +63,7 @@
             :description="description"
             @refresh="refresh"
             :loading="loading"
+            :error="dialogError"
         />
     </div>
 </template>
@@ -82,6 +83,7 @@ const newCommand = ref("");
 const newAmount = ref("");
 const dialogVisible = ref(false);
 const loading = ref(false);
+const dialogError = ref("");
 
 const COST = "cost";
 const AMOUNT = "amount";
@@ -114,9 +116,18 @@ async function refresh(force) {
         list.value.length = 0;
     }
     loading.value = true;
-    await queryExchangeDataConfig(force);
-    await queryExchangeDataList(config);
-    loading.value = false;
+    try {
+        await queryExchangeDataConfig(force);
+        await queryExchangeDataList(config);
+    }
+    catch (error) {
+        console.log("加载失败");
+        console.log(error);
+        dialogError.value = "拉取数据失败, 请检查网络或联系管理员";
+    }
+    finally {
+        loading.value = false;
+    }
 }
 
 /**

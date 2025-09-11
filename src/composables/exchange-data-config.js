@@ -9,7 +9,7 @@ export function useGetExchangeDataConfig() {
         // await new Promise((resolve) => {
         //     setTimeout(() => {
         //         resolve();
-        //     }, 4000);
+        //     }, 11000);
         // });
         // throw new Error("1111222");
         if (!force) {

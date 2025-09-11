@@ -73,6 +73,7 @@ import { reactive, ref, onMounted, computed } from "vue";
 import { useGetExchangeData } from "../composables/exchange-data";
 import { useGetExchangeDataConfig } from "../composables/exchange-data-config";
 import SimpleDialog from "../components/SimpleDialog.vue";
+// import { testCloudLog } from "../api/exchange-data";
 
 const command = ref("");
 const parsed = ref(false);
@@ -92,7 +93,7 @@ const TYPE2 = "PowerShell";
 const fieldPattern = /[\-]+\w+\s+/;
 
 const { config, queryExchangeDataConfig } = useGetExchangeDataConfig();
-const { list, queryExchangeDataList, spreadsheetSource } = useGetExchangeData();
+const { list, queryExchangeData, spreadsheetSource } = useGetExchangeData();
 
 const descriptions = [
     "如果没有看到想要的兑换参数的话, 可前往在线表格帮忙填写",
@@ -111,6 +112,15 @@ onMounted(() => {
     refresh(false);
 });
 
+function getClientInfo() {
+    const clientInfo = {
+      userAgent: navigator.userAgent
+    };
+    return clientInfo;
+}
+
+const clientInfo = getClientInfo();
+
 async function refresh(force) {
     if (list.value.length) {
         list.value.length = 0;
@@ -118,10 +128,13 @@ async function refresh(force) {
     loading.value = true;
     try {
         await queryExchangeDataConfig(force);
-        await queryExchangeDataList(config);
+        await queryExchangeData({
+            ...config,
+            client: clientInfo
+        });
     }
     catch (error) {
-        console.log("加载失败");
+        console.log("拉取数据失败");
         console.log(error);
         dialogError.value = "拉取数据失败, 请检查网络或联系管理员";
     }

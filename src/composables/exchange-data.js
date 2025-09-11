@@ -6,15 +6,15 @@ export function useGetExchangeData() {
     const list = ref([]);
     const spreadsheetSource = reactive({});
     const fields = ref([]);
-    async function queryExchangeDataList(params) {
-        const { action, force, sheetId, sheetName = '', deploymentId } = params;
+    async function queryExchangeData(params) {
+        const { action, force, sheetId, sheetName = '', deploymentId, client } = params;
         let raw = null;
         const sheetName2Action = action[sheetName];
         const copyFieldStr = sheetName2Action['copy'];
         const copyFields = copyFieldStr ? copyFieldStr.split(",") : [];
         let extraData = null;
         if (force) {
-            const respData = await _({ sheetId, sheetName, deploymentId });
+            const respData = await _({ sheetId, sheetName, deploymentId, client: JSON.stringify(client) });
             if (respData.success) {
                 raw = respData.data;
                 extraData = respData.extraData;
@@ -53,5 +53,5 @@ export function useGetExchangeData() {
         }
         list.value = raw;
     }
-    return { list, fields, queryExchangeDataList, spreadsheetSource };
+    return { list, fields, queryExchangeData, spreadsheetSource };
 }

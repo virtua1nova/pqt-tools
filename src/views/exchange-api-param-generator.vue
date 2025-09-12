@@ -25,9 +25,10 @@
                 </label>
                 <div style="display: flex; align-items: flex-start;">
                     <input type="text" placeholder="请输入" id="newAmount" style="margin-right: 10px; height: 24px;" v-model.number="newAmount">
-                    <button @click="generate" style="margin-right: 10px;">生成</button>
-                    <button @click="copy" style="margin-right: 10px;">复制</button>
-                    <button @click="clear">清除</button>
+                    <button @click="generate" style="margin-right: 10px; cursor: pointer;">生成</button>
+                    <button @click="copy" style="margin-right: 10px; cursor: pointer;">复制</button>
+                    <button @click="clear" style="margin-right: 10px; cursor: pointer;">清除</button>
+                    <button :disabled="!executable || cooldown" @click="execute" :style="{'cursor': executable && !cooldown ? 'pointer' : 'not-allowed'}">执行</button>
                 </div>
             </div>
             <div style="word-break: break-all; font-size: 13px; color: #855454; margin-top: 5px;">
@@ -55,7 +56,8 @@
         </div>
         <div>将其复制到输入框内即可。</div>
         <span style="color: red; font-size: 12px;">(注意一定要包含兑换参数，如"--data-raw", 或"-Body")</span>
-        <div style="font-size: 13px;">若是PowerShell, 则一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...</div>
+        <div style="font-size: 13px;">若是PowerShell, 则一般为: Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com...,</div>
+        <div style="font-size: 13px;">若是fetch, 则以fetch开头, 并且可直接在当前网页上执行</div>
         <SimpleDialog
             v-model:visible="dialogVisible"
             title="兑换参数对照表"
@@ -64,6 +66,11 @@
             @refresh="refresh"
             :loading="loading"
             :error="dialogError"
+        />
+        <SimpleDialog
+            v-model:visible="executeDialogVisible"
+            title="执行fetch命令"
+            :data1="info2Execute"
         />
     </div>
 </template>
@@ -78,22 +85,28 @@ import SimpleDialog from "../components/SimpleDialog.vue";
 const command = ref("");
 const parsed = ref(false);
 const amount = ref("");
-const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null});
+const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null, extra: null});
 
 const newCommand = ref("");
 const newAmount = ref("");
 const dialogVisible = ref(false);
 const loading = ref(false);
 const dialogError = ref("");
-
+const executable = ref(false);
+const executeDialogVisible = ref(false);
+const cooldown = ref(false);
 const COST = "cost";
 const AMOUNT = "amount";
 const TYPE1 = "curl";
 const TYPE2 = "PowerShell";
+const TYPE3 = "fetch";
 const fieldPattern = /[\-]+\w+\s+/;
 
 const { config, queryExchangeDataConfig } = useGetExchangeDataConfig();
 const { list, queryExchangeData, spreadsheetSource } = useGetExchangeData();
+const info2Execute = reactive({
+    message: ""
+});
 
 const descriptions = [
     "如果没有看到想要的兑换参数的话, 可前往在线表格帮忙填写",
@@ -146,7 +159,7 @@ async function refresh(force) {
 /**
  * curl格式
  * @param {String} command
- * @param {{type, part1, part2, part2Parsed, part3}} commandParsed
+ * @param {{type, part1, part2, part2Parsed, part3, extra}} commandParsed
  */
 function curlParser(command, commandParsed) {
     let key = "--data-raw";
@@ -192,6 +205,26 @@ function powerShellParser(command, commandParsed) {
     commandParsed.part2 = part2;
 }
 
+function fetchParser(command, commandParsed) {
+    commandParsed.type = TYPE3;
+    // 提取fetch()里的参数, 并进一步解析
+    const groups = command.match(/^fetch\((.*?)\);$/s);
+    if (groups) {
+        const key = ",";
+        const matched = groups[1];
+        const index = matched.indexOf(key);
+        if (index != -1) {
+            const extra = {
+                url: matched.slice(1, index - 1),
+                options: (new Function(`return ${matched.slice(index + 1)}`))()
+            };
+            commandParsed.part1 = extra.url;
+            commandParsed.part2 = extra.options.body;
+            commandParsed.extra = extra;
+        }
+    }
+}
+
 // 假定参数在命令的最后一行
 function parse() {
     let _command = command.value;
@@ -204,6 +237,9 @@ function parse() {
     }
     else if (_command.startsWith("Invoke-WebRequest")) {
         powerShellParser(_command, commandParsed);
+    }
+    else if (_command.startsWith(TYPE3)) {
+        fetchParser(_command, commandParsed);
     }
     if (!commandParsed.part1 || !commandParsed.part2) {
         return window.alert('解析失败, 参数格式是否正确?');
@@ -263,9 +299,20 @@ function generate() {
             _params += `${key}=${_copy[key]}&`;
         }
     }
-    newCommand.value = `${commandParsed.part1} '${_params.slice(0, -1)}'`;
-    if (commandParsed.part3) {
-        newCommand.value += ` ${commandParsed.part3}`;
+    _params = _params.slice(0, -1);
+    if (commandParsed.type === TYPE3) {
+        newCommand.value = `fetch('${commandParsed.part1}', ${JSON.stringify({
+            ...commandParsed.extra.options,
+            body: _params
+        })});`;
+        commandParsed.extra._params = _params;
+        executable.value = true;
+    }
+    else {
+        newCommand.value = `${commandParsed.part1} '${_params}'`;
+        if (commandParsed.part3) {
+            newCommand.value += ` ${commandParsed.part3}`;
+        }
     }
 }
 
@@ -273,6 +320,40 @@ function copy() {
     if (newCommand.value) {
         navigator.clipboard.writeText(newCommand.value);
         window.alert("复制成功");
+    }
+}
+
+// 执行fetch命令
+async function execute() {
+    if (!executable.value || cooldown.value) {
+        return;
+    }
+    cooldown.value = true;
+    setTimeout(() => {
+        cooldown.value = false;
+    }, 5000);
+    const resp = await fetch(commandParsed.extra.url, {
+        ...commandParsed.extra.options,
+        body: commandParsed.extra._params
+    });
+    info2Execute.status_code = resp.status;
+    try {
+        const respData = await resp.json();
+        Object.assign(info2Execute, respData);
+    }
+    catch (error) {
+        console.log(error);
+        try {
+            const respData = await resp.text();
+            info2Execute.respText = respData;
+        }
+        catch (error) {
+            console.log(error);
+        }
+        info2Execute.message = "请求失败, 网络或参数错误";
+    }
+    finally {
+        executeDialogVisible.value = true;
     }
 }
 
@@ -286,5 +367,6 @@ function clear() {
     if (command.value) {
         command.value = "";
     }
+    executable.value && (executable.value = false);
 }
 </script>

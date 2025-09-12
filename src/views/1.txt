@@ -1,0 +1,46 @@
+fetch("http://192.168.3.31/0/easyblog/admin/article/submit", {
+'method': 'POST',
+'headers': {
+    'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+    'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
+    'sec-ch-ua-arch': '"x86"',
+    'sec-ch-ua-platform-version': '"10.15.7"',
+    'x-client-transaction-id': 'db+bzFIBBC2sSId0RtMsdBP+cjRv/7J4UfnFak0VtwcdUPDhHn0rElQ8T3+X2K+joQlHAXE+G9htTAR1oNpEBY+OB+K8dg',
+    'x-twitter-auth-type': 'OAuth2Session',
+    'sec-ch-ua-full-version-list': '"Chromium";v="128.0.6613.138", "Not;A=Brand";v="24.0.0.0", "Google Chrome";v="128.0.6613.138"',
+    'sec-ch-ua-bitness': '"64"',
+    'sec-ch-ua-model': '""',
+    'sec-ch-ua-platform': '"macOS"',
+    'x-twitter-client-language': 'en',
+    'sec-ch-ua-mobile': '?0',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+    'content-type': 'application/x-www-form-urlencoded',
+    'sec-ch-ua-full-version': '"128.0.6613.138"',
+    'x-twitter-active-user': 'yes',
+    'Accept': '*/*'
+},
+'body': 'amount=10&cost=%5B%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003815%22%2C%22value%22%3A%221500%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003816%22%2C%22value%22%3A%221350%22%7D%2C%7B%22asset_type%22%3A%225%22%2C%22asset_id%22%3A%224003817%22%2C%22value%22%3A%22600%22%7D%5D&setting_id=544&debug=true'
+});
+
+Invoke-WebRequest -UseBasicParsing -Uri 'https://x.com/i/api/1.1/graphql/user_flow.json' -Method POST `
+-Headers @{
+    'sec-ch-ua'='"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"'
+    'x-csrf-token'='593707bc55afe63b4c65cb2823f6ae9cfe74c716996f04f2a1715e6de1089be32120ef22ddd5a573c06b25eedc4f81c81c031e10f174a5c3829a9ad3219b1651a6eb48102cb3e1ca1ae54631dae476a9'
+    'authorization'='Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
+    'sec-ch-ua-arch'='"x86"'
+    'sec-ch-ua-platform-version'='"10.15.7"'
+    'x-client-transaction-id'='db+bzFIBBC2sSId0RtMsdBP+cjRv/7J4UfnFak0VtwcdUPDhHn0rElQ8T3+X2K+joQlHAXE+G9htTAR1oNpEBY+OB+K8dg'
+    'x-twitter-auth-type'='OAuth2Session'
+    'sec-ch-ua-full-version-list'='"Chromium";v="128.0.6613.138", "Not;A=Brand";v="24.0.0.0", "Google Chrome";v="128.0.6613.138"'
+    'sec-ch-ua-bitness'='"64"'
+    'sec-ch-ua-model'='""'
+    'sec-ch-ua-platform'='"macOS"'
+    'x-twitter-client-language'='en'
+    'sec-ch-ua-mobile'='?0'
+    'User-Agent'='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+    'content-type'='application/x-www-form-urlencoded'
+    'sec-ch-ua-full-version'='"128.0.6613.138"'
+    'x-twitter-active-user'='yes'
+    'Accept'='*/*'
+} `
+-Body 'debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1757648361984%2C%22duration_ms%22%3A154%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_active%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1757647704048%2C%22client_event_sequence_number%22%3A339%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1757648363305%2C%22items%22%3A%5B%7B%22item_type%22%3A0%2C%22id%22%3A%221966327172022616122%22%2C%22author_id%22%3A%221778923395197116416%22%2C%22is_viewer_follows_tweet_author%22%3Atrue%2C%22is_tweet_author_follows_viewer%22%3Afalse%2C%22is_viewer_super_following_tweet_author%22%3Afalse%2C%22is_viewer_super_followed_by_tweet_author%22%3Afalse%2C%22is_tweet_author_super_followable%22%3Afalse%2C%22media_details%22%3A%7B%22photo_count%22%3A1%2C%22content_id%22%3A%221966327168537104384%22%2C%22publisher_id%22%3A%221778923395197116416%22%2C%22media_type%22%3A8%2C%22dynamic_ads%22%3Afalse%7D%2C%22media_details_v2%22%3A%5B%7B%22content_id%22%3A%221966327168537104384%22%2C%22publisher_id%22%3A%221778923395197116416%22%2C%22media_type%22%3A8%2C%22dynamic_ads%22%3Afalse%7D%5D%2C%22engagement_metrics%22%3A%7B%22reply_count%22%3A5%2C%22retweet_count%22%3A4%2C%22favorite_count%22%3A86%2C%22quote_count%22%3A0%7D%2C%22position%22%3A8%2C%22sort_index%22%3A%221966343690339221496%22%2C%22suggestion_details%22%3A%7B%22controller_data%22%3A%22DAACDAABDAABCgABAAAAQgAFAAEKAAKAAAAAAAEAAAoACYTSEtWnbeMnCgAKAAABmTv5sccIAAsAAAAIDwAMAwAAACUBAAUAQgAAAAAAAQAAAACAAAAAAAAAAAAAAAAAAADgAQAAAAAQCgAOE%2FyQKF9YRuUKABA9DLhX5BlAzAAAAAA%3D%22%2C%22suggestion_type%22%3A%22ForYouInNetwork%22%7D%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22home%22%2C%22section%22%3A%22home%22%2C%22component%22%3A%22for_you_in_network%22%2C%22element%22%3A%22tweet%22%2C%22action%22%3A%22favorite%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1757647704048%2C%22client_event_sequence_number%22%3A340%2C%22client_app_id%22%3A%223033300%22%7D%5D'

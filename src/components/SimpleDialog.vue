@@ -9,13 +9,20 @@
         <h2>{{ title }}</h2>
         <button class="close-btn" @click="closeModal">×</button>
       </div>
-      <div class="desc">
+      <div class="desc" v-if="description.length">
         <p v-for="(item, index) in description" :key="index">
           {{index + 1}}、{{ item }}
         </p>
       </div>
+      <!-- 仅展示信息 -->
+      <div v-if="key2Data1.length" class="modal-body data-state">
+        <!-- <p>{{ data1.message }}</p> -->
+        <p v-for="(value, key) in data1" :key="key">
+          {{key}}: {{value}}
+        </p>
+      </div>
       <!-- 加载状态 -->
-      <div v-if="loading" class="modal-body loading-state">
+      <div v-else-if="loading" class="modal-body loading-state">
         <div class="loading"></div>
         <p>加载数据中...</p>
       </div>
@@ -95,6 +102,10 @@ export default {
     description: {
       type: Array,
       default: () => [],
+    },
+    data1: {
+      type: Object,
+      default: () => ({})
     }
   },
   emits: [
@@ -131,6 +142,9 @@ export default {
         return Object.keys(this.data[0]);
       }
       return [];
+    },
+    key2Data1() {
+      return Object.keys(this.data1);
     }
   }
 };

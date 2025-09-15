@@ -80,7 +80,6 @@ import { reactive, ref, onMounted, computed } from "vue";
 import { useGetExchangeData } from "../composables/exchange-data";
 import { useGetExchangeDataConfig } from "../composables/exchange-data-config";
 import SimpleDialog from "../components/SimpleDialog.vue";
-// import { testCloudLog } from "../api/exchange-data";
 
 const command = ref("");
 const parsed = ref(false);
@@ -225,7 +224,8 @@ function fetchParser(command, commandParsed) {
     }
 }
 
-// 假定参数在命令的最后一行
+// 要修改的地方有两个：amount和cost;
+// 解析出amount，并根据新设置的amount来生成cost，其他不变
 function parse() {
     let _command = command.value;
     if (!_command) {
@@ -251,9 +251,15 @@ function parse() {
         let [a, b] = item.split("=");
         if (a === COST) {
             b = decodeURIComponent(b);
-            b = JSON.parse(b.replace(/\+/g, ""));
-            for (const item of b) {
-                item.unit = item.value / map[AMOUNT];
+            // json字符串；像是需要多种材料的
+            if (b.startsWith("[")) {
+                b = JSON.parse(b.replace(/\+/g, ""));
+                for (const item of b) {
+                    item.unit = item.value / map[AMOUNT];
+                }
+            }
+            else {
+                map.costUnit = b / map[AMOUNT];
             }
         }
         map[a] = b;
@@ -284,16 +290,22 @@ function generate() {
     _copy[AMOUNT] = _amount;
     for (const key in _copy) {
         if (key === COST) {
-            const _cost = [];
-            for (const item of _copy[key]) {
-                const obj = {
-                    ...item
-                };
-                obj.value = '' + (item.unit * _amount);
-                delete obj.unit;
-                _cost.push(obj);
+            const cost = _copy[key];
+            if (Array.isArray(cost)) {
+                const _cost = [];
+                for (const item of cost) {
+                    const obj = {
+                        ...item
+                    };
+                    obj.value = '' + (item.unit * _amount);
+                    delete obj.unit;
+                    _cost.push(obj);
+                }
+                _params += `${key}=${encodeURIComponent(JSON.stringify(_cost))}&`;
             }
-            _params += `${key}=${encodeURIComponent(JSON.stringify(_cost))}&`;
+            else {
+                _params += `${key}=${_copy.costUnit * _amount}&`;
+            }
         }
         else {
             _params += `${key}=${_copy[key]}&`;

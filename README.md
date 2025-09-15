@@ -16,4 +16,8 @@
 
 可从表中选取兑换物品的参数，若物品不存在，则可前往指示的在线表格填写数据，供后人使用；技术栈为Apps Script和谷歌套装(Google Drive、Google Sheet、Google Cloud等)
 
+#### 3、适配了除活动商店以外的兑换场景
+
+如金币商店，可兑换体力药水；
+
 ![image](./src/assets/41DBAFC079FB14243897BEB29A087E72.png)

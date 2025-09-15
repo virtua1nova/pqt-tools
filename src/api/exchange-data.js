@@ -2,7 +2,7 @@
 // 从配置文件中获取
 export async function getExchangeData(params) {
     const { sheetId, sheetName = '', deploymentId, client } = params;
-    const { cancel, controller } = setRequestTimeout(10000);
+    const { cancel, controller } = setRequestTimeout(15000);
     const scriptUrl = `https://script.google.com/macros/s/${deploymentId}/exec`;
     let url = `${scriptUrl}?sheetId=${sheetId}&sheetName=${sheetName}&client=${client}`;
     const resp = await fetch(url, {
@@ -29,7 +29,7 @@ function setRequestTimeout(timeout) {
 
 // 获取兑换配置(当前表格的信息)
 export async function getExchangeDataConfig() {
-    const { cancel, controller } = setRequestTimeout(10000);
+    const { cancel, controller } = setRequestTimeout(15000);
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyRrP5xSt3A_fyTieysOFgv2gljQI2iunJEc0CRijOlOTOXiNesbNX2-GZyRRFVRXFe/exec";
     let url = `${scriptUrl}`;
     const resp = await fetch(url, {

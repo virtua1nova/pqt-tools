@@ -9,10 +9,10 @@
                     抓包数据:
                 </label>
                 <div style="display: flex; align-items: flex-start; margin-bottom: 5px;">
-                    <textarea v-model="command" placeholder="请输入" id="command" style="width: 360px; margin-right: 10px;" rows="4" />
+                    <textarea v-model="command" placeholder="请输入" id="command" style="width: 500px; margin-right: 10px;" rows="6" />
                 </div>
                 <div style="margin-bottom: 5px;">
-                    <button @click="dialogVisible = true" style="margin-right: 10px;">浏览参数</button>
+                    <button @click="showParamsDialog" style="margin-right: 10px;">浏览参数</button>
                     <button @click="parse" style="margin-right: 10px;">解析</button>
                     <span v-if="parsed">
                         成功, 当前兑换数量为: {{amount}}
@@ -120,9 +120,12 @@ const description = computed(() => {
     return descriptions;
 });
 
-onMounted(() => {
-    refresh(false);
-});
+function showParamsDialog() {
+    dialogVisible.value = true;
+    if (!list.value.length) {
+        refresh(false);
+    }
+}
 
 function getClientInfo() {
     const clientInfo = {
@@ -288,10 +291,18 @@ function generate() {
     let _params = "";
     const _copy = { ...commandParsed.part2Parsed };
     _copy[AMOUNT] = _amount;
+    let costUnit;
+    const cost = _copy[COST];
+    if (!Array.isArray(cost)) {
+        costUnit = _copy.costUnit;
+        delete _copy.costUnit;
+    }
     for (const key in _copy) {
         if (key === COST) {
-            const cost = _copy[key];
-            if (Array.isArray(cost)) {
+            if (costUnit) {
+                _params += `${key}=${costUnit * _amount}&`;
+            }
+            else {
                 const _cost = [];
                 for (const item of cost) {
                     const obj = {
@@ -302,9 +313,6 @@ function generate() {
                     _cost.push(obj);
                 }
                 _params += `${key}=${encodeURIComponent(JSON.stringify(_cost))}&`;
-            }
-            else {
-                _params += `${key}=${_copy.costUnit * _amount}&`;
             }
         }
         else {

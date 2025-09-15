@@ -1,6 +1,7 @@
 import { getExchangeData as _ } from "../api/exchange-data";
 
 import { reactive, ref } from "vue";
+import exchangeData1 from "../assets/exchange-data-1.json";
 
 export function useGetExchangeData() {
     const list = ref([]);
@@ -14,10 +15,30 @@ export function useGetExchangeData() {
         const copyFields = copyFieldStr ? copyFieldStr.split(",") : [];
         let extraData = null;
         if (force) {
+            // 接口数据加上本地配置的数据(通常不变)
             const respData = await _({ sheetId, sheetName, deploymentId, client: JSON.stringify(client) });
             if (respData.success) {
                 raw = respData.data;
                 extraData = respData.extraData;
+                // 筛选字段
+                const exchangeData1Filtered = [];
+                const changeDataKeys = Object.keys(exchangeData1[0]).filter(item => !item.startsWith("_"));
+                let maxIndex = raw.length - 1;
+                for (const item of exchangeData1) {
+                    const filtered = {};
+                    for (const key of changeDataKeys) {
+                        filtered[key] = item[key];
+                    }
+                    const _imageFields = item._imageFields;
+                    maxIndex++;
+                    if (_imageFields) {
+                        for (const field of _imageFields.split(",")) {
+                            extraData.imageFields.push(`${maxIndex}:${field}`);
+                        }
+                    }
+                    exchangeData1Filtered.push(filtered);
+                }
+                raw.push(...exchangeData1Filtered);
                 Object.assign(spreadsheetSource, respData.source);
                 localStorage.setItem("exchange-data", JSON.stringify(respData))
             }

@@ -27,8 +27,9 @@ export function useGetExchangeDataConfig() {
         const respData = await _();
         Object.assign(config, respData);
         config.expiration = date.setHours(24, 0, 0, 0);
-        config.force = true;
         localStorage.setItem("exchange-data-config", JSON.stringify(config));
+        // 不记录该变量在本地存储中
+        config.force = true;
     }
 
     return { config, queryExchangeDataConfig };

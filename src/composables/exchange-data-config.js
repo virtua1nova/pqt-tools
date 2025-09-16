@@ -12,13 +12,14 @@ export function useGetExchangeDataConfig() {
         //     }, 11000);
         // });
         // throw new Error("1111222");
+        const now = date.getTime();
         if (!force) {
             const configStr = localStorage.getItem("exchange-data-config");
             let _config = configStr ? JSON.parse(configStr) : null;
             // 如果没过期的话，可以使用
             if (_config) {
                 const expiration = +_config.expiration;
-                if (expiration > date.getTime()) {
+                if (expiration > now) {
                     Object.assign(config, _config);
                     return;
                 }
@@ -26,7 +27,7 @@ export function useGetExchangeDataConfig() {
         }
         const respData = await _();
         Object.assign(config, respData);
-        config.expiration = date.setHours(24, 0, 0, 0);
+        config.expiration = now + 60 * 60 * 12 * 1000;
         localStorage.setItem("exchange-data-config", JSON.stringify(config));
         // 不记录该变量在本地存储中
         config.force = true;

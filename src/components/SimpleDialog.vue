@@ -46,7 +46,7 @@
             <tr v-for="(row, rowIndex) in data" :key="rowIndex">
               <td v-for="(cell, cellIndex) in row" :key="cellIndex">
                 <img v-if="cell.renderImage" :src="cell.value" referrerpolicy="no-referrer">
-                <div class="multi-line" v-else>
+                <div class="multi-line" v-else :title="cell.value">
                   <span>{{ cell.value }}</span>
                 </div>
                 <button class="btn-copy" v-if="cell.copy" @click="copy(cell.value)">
@@ -174,8 +174,8 @@ export default {
   background: white;
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 800px;
+  width: 70%;
+  max-width: 1000px;
   max-height: 80vh;
   overflow: hidden;
   display: flex;

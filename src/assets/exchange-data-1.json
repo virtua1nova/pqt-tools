@@ -2,7 +2,8 @@
     {
         "兑换物品名称": "体力药水(小)",
         "图片": "https://lh3.googleusercontent.com/d/1M_1Zvh24BKTtiz-PkHfPEcpX22wb-kyW=w1000?authuser=0",
-        "参数": "item_id=36&cost_type=25&store_id=1&cost=4800&amount=1",
+        "参数": "item_id=36&cost_type=25&cost=4800&amount=1",
+        "备注": "需要将原始抓包数据的store_id与网站提供的参数拼接。举个例子, 如果某次抓包的数据为【amount=1&cost=8300&cost_type=25&item_id=15&store_id=3】, 那么最终的兑换药水参数应该为【item_id=36&cost_type=25&cost=4800&amount=1&store_id=3】。",
         "版本": "",
         "_imageFields": "图片"
     }

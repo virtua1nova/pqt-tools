@@ -3,7 +3,23 @@
         "兑换物品名称": "体力药水(小)",
         "图片": "https://lh3.googleusercontent.com/d/1M_1Zvh24BKTtiz-PkHfPEcpX22wb-kyW=w1000?authuser=0",
         "参数": "item_id=36&cost_type=25&cost=4800&amount=1",
-        "备注": "需要将原始抓包数据的store_id与网站提供的参数拼接。举个例子, 如果某次抓包的数据为【amount=1&cost=8300&cost_type=25&item_id=15&store_id=3】, 那么最终的兑换药水参数应该为【item_id=36&cost_type=25&cost=4800&amount=1&store_id=3】。",
+        "备注": "需要将原始抓包数据的store_id与网站提供的参数拼接, 且需要在金币商店中刷出药水的时候才可使用。",
+        "版本": "",
+        "_imageFields": "图片"
+    },
+    {
+        "兑换物品名称": "体力药水(中)",
+        "图片": "https://lh3.googleusercontent.com/rd-d/ALs6j_GsgQnuYAfGd63MBHIqYtczmSfQFb37-ZNmHzq4WoYJVFdbmDuIyNfvmtKq-bHIkQYMdMGJln-VmNdPWoR5Qj9la5327jQ--Vxks2yD7RPx5XQCZpyXSWwcZ6gude58bPXyminyvb1EHIbFUh5TrGTDTh0w-mCv3Jlgg6muT_injSk3j1ATTMvsMzXeGuqc5V2tL3OqEW9edOYpbG32rbp8eLg-SV3IdVKjGS92SALGdzVZN2s9-7DrWil4u-XrJCI92hLrwEpdcZWas_YZtnCDi-bJRAsAogCoXdw9FrJAsFyZlSiRXOVpSlJTfKvBZ1v_R_n4e5GUc9LbBcyoQhRWcz4c5LpbmaKZIRObcogDsURculRrkkfVU5EJWo7wJKC12jtzHQdOlY31xvPNgWt3pg64z99jJzIdUMWiPhMDusBrPdqQzBCaDgGZyA5zCtH7IWhnnutgw6-mCdCb7qQ_3rDvuL7iC28g04T0EbT_0kCA_V1MLCFwQ4PrO4wFL4nlxwFvUN1ImLW9BwHzGiNe0Z76QmaaQgKYKiFQJq43fWH3E-MTQwP7JsPut-IIPAZExeiBgOdBUZQPRUh3Frn2ZnasjKVZxw2P7jHOYkA123VSplqatV9fd46vafO4p_oo6UUwjbJGPJ5c3rNqPZW8iK6evf2NnGuOtiWmYOGDaaR5FZizL0IeqKWQrpqHIgVGl_HpmWqsPKczl1dF9_xJv6k6x37U9yVQM9z5DYesT-zB618sxB4k4laakxiGQsnx3ItmGjV_3NBRrcR26WRzYggLWc4emuBoRwZLeU2eNsawqLXpSD3t7BdvukS8kp_qtzQc95ademfsPZitT0kzVj9ri0_2lUVMhhBo3Ka6N5rEp7QIg6J_w0EUcsZbgkWHE1_2lgU43wv9X-arZ1FulD5KLHGXZZAI9GR4lwv6LTyqjB9qOHMi1GNLpCZnHLUnoXJ9KZGDrCdhTjGZifASl4Qq14B3zAPU4FOYkPtm96Sr_vdZYgk=w1000?authuser=0",
+        "参数": "amount=1&cost=5000&cost_type=25&item_id=37",
+        "备注": "同条件下, 价格比体力药水(小)贵, 与体力药水(大)相同",
+        "版本": "",
+        "_imageFields": "图片"
+    },
+    {
+        "兑换物品名称": "体力药水(大)",
+        "图片": "https://lh3.googleusercontent.com/rd-d/ALs6j_HH7F7eZdnIppJzPZNcYnXOkZZqnWMVBktI8FP2uRhLAWY1YK42CuwTUiKCObogvNy3Lc9EeryyraiE2szogs5Yh74sCsm9r-GSYmmcUilqJU28QGN1ToUWlkMiwBVlIuMRv22GlqBo3CMBouXlxggSXyXrnCStsPntrhgC5Rjail73gRsRCyEP_6hF4LTSzvqAb7V7MhaBkh1CHdPx6NEFcBsqb0-c7kddB3Hh5vpELsF7yt-FeDoQAEw0xeKLiQRL4QU7ZcCImLnK_abQJ2GmXm3r_ikdWTEnX0wQSh7qTTAtll_AEJLTiH0j_BHD3-qvHfZZdtqAtN_iKLvjgJfYdY4zNsGVx4rnKsFuYj_Jk4a7Tpx6_rSyZKqjlcclRRqTzp82vG0f0a_UIHxGnLU3t750aa_vo6yWKexdZtzZ24TuTdbRgaxAUldzGryCn2RK1MumUcnn8dOGtE0iLBkUwzVknroZnOzTxGoDNDaGQvSkP8nr4-l9L-2S7oMh_03vHhPuhdDUaC6QS70fPRPzqSYS5MdC3i7LgSABwSbRNuRLMXtYpP5S6ycdPu0ThaDpmJU-wGQtfP6Jd3RUb7xjLadrvNV1iMRXG-NOVY6F5XPce3jAOPVrnmR1L8D5BrDHI6lqmLkVWtDciVkfdwZSXxyTRpMrcwucTl-obGgOfTxwn0EtaMSErXvAm-cBhsZp6cbhXH4sSRjadyzsIhxcOiKcq72Y-YZYgEs1Ao8qsHUBqYEkCfJnKz8gMQTHcTtOJL2xfpZNsKFlvaC1OA79sT0PLAlHD-IoXm9mPfab9wb0Q_WbMAObTb0d_KAVn7u0PGfY5zvgDUGXoIRZo7LkCm1on3zGQWkXeQzRoUTPFGfVoWvCkknkdvpJdiH_6OjQDd00_O9RpF6eT9w3yAfhH-v_HFplUZgTXfJl7O7de0leMMVtH5St7hOqkvTzzW7SHNo8P9GRqHgLbN7sJpaxIKJ_I9l9haBzghkbMG9PcHEeco0deT8=w1000?authuser=0",
+        "参数": "amount=1&cost=10000&cost_type=25&item_id=38",
+        "备注": "",
         "版本": "",
         "_imageFields": "图片"
     }

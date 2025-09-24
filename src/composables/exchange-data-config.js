@@ -25,6 +25,9 @@ export function useGetExchangeDataConfig() {
                 }
             }
         }
+        for (const key of Object.keys(config)) {
+            delete config[key];
+        }
         const respData = await _();
         Object.assign(config, respData);
         config.expiration = now + 60 * 60 * 12 * 1000;

@@ -10,7 +10,7 @@ export function useGetExchangeData() {
     async function queryExchangeData(params) {
         const { action, force, sheetId, sheetName = '', deploymentId, client } = params;
         let raw = null;
-        const sheetName2Action = action[sheetName];
+        const sheetName2Action = action[sheetName] || action['default'];
         const copyFieldStr = sheetName2Action['copy'];
         const copyFields = copyFieldStr ? copyFieldStr.split(",") : [];
         let extraData = null;

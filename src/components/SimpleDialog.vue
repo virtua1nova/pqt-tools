@@ -38,7 +38,7 @@
           <thead>
             <tr>
               <th v-for="(header, index) in tabHeaders" :key="index">
-                {{ header || `列 ${index + 1}` }}
+                <div class="sticky-cell">{{ header || `列 ${index + 1}` }}</div>
               </th>
             </tr>
           </thead>
@@ -49,7 +49,7 @@
                 <div class="multi-line" v-else :title="cell.value">
                   <span>{{ cell.value }}</span>
                 </div>
-                <button class="btn-copy" v-if="cell.copy" @click="copy(cell.value)">
+                <button class="btn-copy" v-if="cell.copy" @click="copy(cell.value, row)">
                   复制
                 </button>
               </td>
@@ -112,6 +112,7 @@ export default {
     "update:visible", // 支持 v-model
     "close",
     "refresh",
+    "copy"
   ],
   methods: {
     // 点击遮罩层关闭
@@ -129,11 +130,13 @@ export default {
     refresh() {
       this.$emit("refresh", true);
     },
-    copy(content) {
-      if (content) {
-        navigator.clipboard.writeText(content);
-        window.alert("复制成功");
-      }
+    copy(content, row) {
+      // if (content) {
+      //   navigator.clipboard.writeText(content);
+      //   this.$emit("log", { type: 'copy', ...row });
+      //   window.alert("复制成功");
+      // }
+      this.$emit('copy', { content, row });
     }
   },
   computed: {
@@ -175,7 +178,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   width: 70%;
-  max-width: 1000px;
+  max-width: 900px;
   max-height: 80vh;
   overflow: hidden;
   display: flex;
@@ -219,7 +222,8 @@ export default {
 
 /* 主体 */
 .modal-body {
-  padding: 10px;
+  margin-top: 10px;
+  padding: 0 10px 10px;
   overflow-y: auto;
   flex: 1;
 }
@@ -295,12 +299,13 @@ export default {
   max-width: 200px;
 }
 
+/* .data-state .sticky-cell { */
 .data-state th {
   background-color: #f8f9fa;
   font-weight: bold;
   position: sticky;
-  top: 0;
-  z-index: 1;
+  top: -1px;
+  z-index: 10;
 }
 
 .data-state tr:nth-child(even) {

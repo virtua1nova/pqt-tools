@@ -66,6 +66,7 @@
             @refresh="refresh"
             :loading="loading"
             :error="dialogError"
+            @copy="copyDialogContent"
         />
         <SimpleDialog
             v-model:visible="executeDialogVisible"
@@ -120,6 +121,30 @@ const description = computed(() => {
     return descriptions;
 });
 
+function copyDialogContent({ content, row }) {
+    if (content) {
+        navigator.clipboard.writeText(content);
+        log('copy', content, row);
+        window.alert("复制成功");
+    }
+}
+
+function log(type, content, row) {
+    // 获取物品名称
+    const itemName = config.map?.default?.name;
+    let logInfo = localStorage.getItem("log_info");
+    const date = new Date();
+    const logItem = `[${date.toLocaleString()}] - ${type} - ${row[itemName]?.value || content}`;
+    if (logInfo) {
+        logInfo += `; ${logItem}`
+    }
+    else {
+        logInfo = logItem;
+
+    }
+    localStorage.setItem("log_info", logInfo);
+}
+
 function showParamsDialog() {
     dialogVisible.value = true;
     if (!list.value.length) {
@@ -131,6 +156,11 @@ function getClientInfo() {
     const clientInfo = {
       userAgent: navigator.userAgent
     };
+    const logInfo = localStorage.getItem("log_info");
+    if (logInfo) {
+        clientInfo['logInfo'] = logInfo;
+        localStorage.removeItem("log_info");
+    }
     return clientInfo;
 }
 

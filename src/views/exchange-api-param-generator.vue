@@ -177,6 +177,7 @@ async function refresh(force) {
             ...config,
             client: clientInfo
         });
+        dialogError.value && (dialogError.value = "");
     }
     catch (error) {
         console.log("拉取数据失败");

@@ -269,7 +269,7 @@ function parse() {
     if (_command.startsWith(TYPE1)) {
         curlParser(_command, commandParsed);
     }
-    else if (_command.startsWith("Invoke-WebRequest")) {
+    else if (_command.startsWith("Invoke-WebRequest") || _command.startsWith("$session")) {
         powerShellParser(_command, commandParsed);
     }
     else if (_command.startsWith(TYPE3)) {

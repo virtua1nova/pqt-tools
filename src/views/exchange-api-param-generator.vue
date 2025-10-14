@@ -77,10 +77,11 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, computed } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useGetExchangeData } from "../composables/exchange-data";
 import { useGetExchangeDataConfig } from "../composables/exchange-data-config";
 import SimpleDialog from "../components/SimpleDialog.vue";
+import { getExchangeData } from "../api/exchange-data";
 
 const command = ref("");
 const parsed = ref(false);
@@ -172,10 +173,9 @@ async function refresh(force) {
     }
     loading.value = true;
     try {
-        await queryExchangeDataConfig(force);
+        await queryExchangeDataConfig(force, clientInfo);
         await queryExchangeData({
-            ...config,
-            client: clientInfo
+            ...config
         });
         dialogError.value && (dialogError.value = "");
     }

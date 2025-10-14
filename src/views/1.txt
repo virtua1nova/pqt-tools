@@ -44,3 +44,38 @@ Invoke-WebRequest -UseBasicParsing -Uri 'https://x.com/i/api/1.1/graphql/user_fl
     'Accept'='*/*'
 } `
 -Body 'debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1757648361984%2C%22duration_ms%22%3A154%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_active%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1757647704048%2C%22client_event_sequence_number%22%3A339%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1757648363305%2C%22items%22%3A%5B%7B%22item_type%22%3A0%2C%22id%22%3A%221966327172022616122%22%2C%22author_id%22%3A%221778923395197116416%22%2C%22is_viewer_follows_tweet_author%22%3Atrue%2C%22is_tweet_author_follows_viewer%22%3Afalse%2C%22is_viewer_super_following_tweet_author%22%3Afalse%2C%22is_viewer_super_followed_by_tweet_author%22%3Afalse%2C%22is_tweet_author_super_followable%22%3Afalse%2C%22media_details%22%3A%7B%22photo_count%22%3A1%2C%22content_id%22%3A%221966327168537104384%22%2C%22publisher_id%22%3A%221778923395197116416%22%2C%22media_type%22%3A8%2C%22dynamic_ads%22%3Afalse%7D%2C%22media_details_v2%22%3A%5B%7B%22content_id%22%3A%221966327168537104384%22%2C%22publisher_id%22%3A%221778923395197116416%22%2C%22media_type%22%3A8%2C%22dynamic_ads%22%3Afalse%7D%5D%2C%22engagement_metrics%22%3A%7B%22reply_count%22%3A5%2C%22retweet_count%22%3A4%2C%22favorite_count%22%3A86%2C%22quote_count%22%3A0%7D%2C%22position%22%3A8%2C%22sort_index%22%3A%221966343690339221496%22%2C%22suggestion_details%22%3A%7B%22controller_data%22%3A%22DAACDAABDAABCgABAAAAQgAFAAEKAAKAAAAAAAEAAAoACYTSEtWnbeMnCgAKAAABmTv5sccIAAsAAAAIDwAMAwAAACUBAAUAQgAAAAAAAQAAAACAAAAAAAAAAAAAAAAAAADgAQAAAAAQCgAOE%2FyQKF9YRuUKABA9DLhX5BlAzAAAAAA%3D%22%2C%22suggestion_type%22%3A%22ForYouInNetwork%22%7D%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22home%22%2C%22section%22%3A%22home%22%2C%22component%22%3A%22for_you_in_network%22%2C%22element%22%3A%22tweet%22%2C%22action%22%3A%22favorite%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1757647704048%2C%22client_event_sequence_number%22%3A340%2C%22client_app_id%22%3A%223033300%22%7D%5D'
+
+$session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$session.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+Invoke-WebRequest -UseBasicParsing -Uri "https://us.nkrpg.com/api/exchange/exchangeItem" `
+-Method "POST" `
+-WebSession $session `
+-Headers @{
+"authority"="us.nkrpg.com"
+  "method"="POST"
+  "path"="/api/exchange/exchangeItem"
+  "scheme"="https"
+  "accept"="*/*"
+  "accept-encoding"="gzip, deflate, br, zstd"
+  "accept-language"="zh-CN,zh;q=0.9"
+  "origin"="https://osapi.nutaku.com"
+  "priority"="u=1, i"
+  "referer"="https://osapi.nutaku.com/"
+  "sec-ch-ua"="`"Chromium`";v=`"140`", `"Not=A?Brand`";v=`"24`", `"Google Chrome`";v=`"140`""
+  "sec-ch-ua-mobile"="?0"
+  "sec-ch-ua-platform"="`"Windows`""
+  "sec-fetch-dest"="empty"
+  "sec-fetch-mode"="cors"
+  "sec-fetch-site"="cross-site"
+  "x-qookia-build"="27.0.0.824"
+  "x-qookia-device"="0886eb7a-e432-4ff0-8437-34962c3dcd62"
+  "x-qookia-device-type"="web"
+  "x-qookia-digest"="64fc895e5d11ff1837cf1722a5a1d4274966245c"
+  "x-qookia-nkid"="52253437"
+  "x-qookia-pack"="3239d773a0ab27dfe363ec7ba52287aadb56ab10"
+  "x-qookia-server-prefix"="UVG"
+  "x-qookia-time"="1759640576"
+  "x-qookia-user"="UVG0000000022"
+} `
+-ContentType "application/x-www-form-urlencoded" `
+-Body "amount=1&setting_id=559&cost=%5b%20%7b%22asset_type%22%3a%225%22%2c%20%22asset_id%22%3a%224003929%22%2c%20%22value%22%3a%2230%22%7d%2c%20%7b%22asset_type%22%3a%225%22%2c%20%22asset_id%22%3a%224003930%22%2c%20%22value%22%3a%2220%22%7d%2c%20%7b%22asset_type%22%3a%225%22%2c%20%22asset_id%22%3a%224003931%22%2c%20%22value%22%3a%2210%22%7d%20%5d"

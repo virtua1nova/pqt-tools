@@ -8,15 +8,17 @@ export function useGetExchangeData() {
     const spreadsheetSource = reactive({});
     const fields = ref([]);
     async function queryExchangeData(params) {
-        const { action, force, sheetId, sheetName = '', deploymentId, client } = params;
+        const { action, force, sheetId, sheetName = ''/** , deploymentId, client**/ } = params;
         let raw = null;
         const sheetName2Action = action[sheetName] || action['default'];
         const copyFieldStr = sheetName2Action['copy'];
+        const renderFieldStr = sheetName2Action['render'];
         const copyFields = copyFieldStr ? copyFieldStr.split(",") : [];
+        const renderFields = renderFieldStr ? renderFieldStr.split(",") : [];
         let extraData = null;
         if (force) {
             // 接口数据加上本地配置的数据(通常不变)
-            const respData = await _({ sheetId, sheetName, deploymentId, client: JSON.stringify(client) });
+            const respData = await _({ sheetId, sheetName/** , deploymentId, client: JSON.stringify(client)**/ });
             if (respData.success) {
                 raw = respData.data;
                 extraData = respData.extraData;
@@ -49,12 +51,12 @@ export function useGetExchangeData() {
             extraData = exchangeData.extraData;
             Object.assign(spreadsheetSource, exchangeData.source);
         }
-        const imageFields = extraData.imageFields || [];
+        // const imageFields = extraData.imageFields || [];
         fields.value = Object.keys(raw[0]);
-        const map = {};
-        for (const item of imageFields) {
-            map[item] = 1;
-        }
+        // const map = {};
+        // for (const item of imageFields) {
+        //     map[item] = 1;
+        // }
 
         for (let i=0; i<raw.length; i++) {
             const rawItem = raw[i];
@@ -62,13 +64,13 @@ export function useGetExchangeData() {
                 rawItem[field] = {
                     value: rawItem[field]
                 };
-                // 渲染图片
-                if (map[`${i}:${field}`]) {
-                    rawItem[field].renderImage = true;
-                }
                 // 复制功能
-                else if (copyFields.includes(field)) {
+                if (copyFields.includes(field)) {
                     rawItem[field].copy = true;
+                }
+                // 渲染图片
+                else if(renderFields.includes(field) && rawItem[field].value?.startsWith("http")) {
+                    rawItem[field].renderImage = true;
                 }
             }
         }

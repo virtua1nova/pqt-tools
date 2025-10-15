@@ -6,12 +6,6 @@ export function useGetExchangeDataConfig() {
     const config = reactive({});
     async function queryExchangeDataConfig(force, client) {
         const date = new Date();
-        // await new Promise((resolve) => {
-        //     setTimeout(() => {
-        //         resolve();
-        //     }, 11000);
-        // });
-        // throw new Error("1111222");
         const now = date.getTime();
         if (!force) {
             const configStr = localStorage.getItem("exchange-data-config");
@@ -28,7 +22,7 @@ export function useGetExchangeDataConfig() {
         for (const key of Object.keys(config)) {
             delete config[key];
         }
-        const respData = await _({ client: JSON.stringify(client) });
+        const respData = await _({ client });
         Object.assign(config, respData);
         config.expiration = now + 60 * 60 * 12 * 1000;
         localStorage.setItem("exchange-data-config", JSON.stringify(config));

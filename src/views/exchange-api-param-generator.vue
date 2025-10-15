@@ -125,17 +125,26 @@ const description = computed(() => {
 function copyDialogContent({ content, row }) {
     if (content) {
         navigator.clipboard.writeText(content);
-        log('copy', content, row);
+        // 获取物品名称
+        const itemName = config.map?.default?.name;
+        const message = `copy:${row[itemName]?.value || content}`;
+        getLogger()(message);
         window.alert("复制成功");
     }
 }
 
-function log(type, content, row) {
-    // 获取物品名称
-    const itemName = config.map?.default?.name;
+function getLogger(level = "info") {
+    return (...args) => {
+        log(level, ...args);
+    }
+}
+
+// 先存到localStorage，之后再进行上报;
+// 上报完之后，删除当前日志
+function log(level, message) {
     let logInfo = localStorage.getItem("log_info");
     const date = new Date();
-    const logItem = `[${date.toLocaleString()}] - ${type} - ${row[itemName]?.value || content}`;
+    const logItem = `[${date.toLocaleString()}] - ${level} - ${message}`;
     if (logInfo) {
         logInfo += `; ${logItem}`
     }
@@ -159,21 +168,36 @@ function getClientInfo() {
     };
     const logInfo = localStorage.getItem("log_info");
     if (logInfo) {
-        clientInfo['logInfo'] = logInfo;
+        clientInfo['log'] = logInfo;
         localStorage.removeItem("log_info");
     }
     return clientInfo;
 }
 
-const clientInfo = getClientInfo();
+// const clientInfo = getClientInfo();
 
 async function refresh(force) {
     if (list.value.length) {
         list.value.length = 0;
     }
     loading.value = true;
+    // 一天最多记录一次
+    const loggedKey = localStorage.getItem("loggedKey");
+    const validTime = loggedKey ? parseInt(loggedKey) : 0;
+    let client = "";
+    const date = new Date();
+    const now = date.getTime();
+    if (validTime < now) {
+        const clientInfo = getClientInfo();
+        if (clientInfo.log) {
+            // 设置为凌晨
+            date.setHours(24, 0, 0, 0);
+            client = JSON.stringify(clientInfo);
+            localStorage.setItem("loggedKey", date.getTime());
+        }
+    }
     try {
-        await queryExchangeDataConfig(force, clientInfo);
+        await queryExchangeDataConfig(force, client);
         await queryExchangeData({
             ...config
         });

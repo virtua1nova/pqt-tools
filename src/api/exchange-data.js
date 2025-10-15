@@ -2,10 +2,8 @@
 // 从配置文件中获取；
 // 更新：因为授权问题，变得很麻烦，故改为前端来调用
 export async function getExchangeData(params) {
-    const { sheetId, sheetName = ''/**, deploymentId, client  */} = params;
+    const { sheetId, sheetName = '' } = params;
     const { cancel, controller } = setRequestTimeout(15000);
-    //const scriptUrl = `https://script.google.com/macros/s/${deploymentId}/exec`;
-    //let url = `${scriptUrl}?sheetId=${sheetId}&sheetName=${sheetName}&client=${client}`;
     const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
     const resp = await fetch(url, {
         method: 'GET',
@@ -57,7 +55,7 @@ function setRequestTimeout(timeout) {
 export async function getExchangeDataConfig(params) {
     const { client = "" } = params;
     const { cancel, controller } = setRequestTimeout(15000);
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbyRrP5xSt3A_fyTieysOFgv2gljQI2iunJEc0CRijOlOTOXiNesbNX2-GZyRRFVRXFe/exec?client=${client}`;
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbwNSL2bAGjo2BW0kSy7f-PO7yDL6xf5TgemhTtUPpljMRL0ub22afYLWmLgEPDyrBQMAQ/exec?client=${client}`;
     let url = `${scriptUrl}`;
     const resp = await fetch(url, {
         method: 'GET',
@@ -67,13 +65,3 @@ export async function getExchangeDataConfig(params) {
     cancel();
     return await resp.json();
 }
-
-// export async function testCloudLog() {
-//     const scriptUrl = "https://script.google.com/macros/s/AKfycbzvjsQR1ZvmQse7dZris_8zBSDkY8Mf98sGixtAXUph762cvZbkFyMEHgpTiK2Txcyd/exec";
-//     let url = `${scriptUrl}`;
-//     const resp = await fetch(url, {
-//         method: 'GET',
-//         redirect: 'follow'
-//     });
-//     return await resp.text();
-// }

@@ -183,8 +183,10 @@ async function refresh(force) {
     let client = "";
     const date = new Date();
     const now = date.getTime();
+    let clearLog;
     if (validTime < now) {
-        const { clearLog, ...clientInfo } = getClientInfo();
+        const { clearLog: a, ...clientInfo } = getClientInfo();
+        clearLog = a;
         if (clientInfo.log) {
             // 设置为凌晨
             date.setHours(24, 0, 0, 0);
@@ -198,7 +200,7 @@ async function refresh(force) {
             ...config
         });
         dialogError.value && (dialogError.value = "");
-        clearLog();
+        clearLog && clearLog();
     }
     catch (error) {
         console.log("拉取数据失败");

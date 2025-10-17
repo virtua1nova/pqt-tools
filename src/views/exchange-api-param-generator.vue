@@ -160,12 +160,14 @@ function showParamsDialog() {
 
 function getClientInfo() {
     const clientInfo = {
-      userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        clearLog() {
+            localStorage.removeItem("log_info");
+        }
     };
     const logInfo = localStorage.getItem("log_info");
     if (logInfo) {
         clientInfo['log'] = logInfo;
-        localStorage.removeItem("log_info");
     }
     return clientInfo;
 }
@@ -182,11 +184,11 @@ async function refresh(force) {
     const date = new Date();
     const now = date.getTime();
     if (validTime < now) {
-        const clientInfo = getClientInfo();
+        const { clearLog, ...clientInfo } = getClientInfo();
         if (clientInfo.log) {
             // 设置为凌晨
             date.setHours(24, 0, 0, 0);
-            client = JSON.stringify(clientInfo);
+            client = encodeURIComponent(JSON.stringify(clientInfo));
             localStorage.setItem("loggedKey", date.getTime());
         }
     }
@@ -196,6 +198,7 @@ async function refresh(force) {
             ...config
         });
         dialogError.value && (dialogError.value = "");
+        clearLog();
     }
     catch (error) {
         console.log("拉取数据失败");

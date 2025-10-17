@@ -86,7 +86,7 @@ import { getExchangeData } from "../api/exchange-data";
 const command = ref("");
 const parsed = ref(false);
 const amount = ref("");
-const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null, extra: null});
+const commandParsed = reactive({ type: '', part1: null, part2: null, part3: null, extra: null });
 
 const newCommand = ref("");
 const newAmount = ref("");
@@ -125,10 +125,6 @@ const description = computed(() => {
 function copyDialogContent({ content, row }) {
     if (content) {
         navigator.clipboard.writeText(content);
-        // 获取物品名称
-        const itemName = config.map?.default?.name;
-        const message = `copy:${row[itemName]?.value || content}`;
-        getLogger()(message);
         window.alert("复制成功");
     }
 }
@@ -173,8 +169,6 @@ function getClientInfo() {
     }
     return clientInfo;
 }
-
-// const clientInfo = getClientInfo();
 
 async function refresh(force) {
     if (list.value.length) {
@@ -240,6 +234,11 @@ function curlParser(command, commandParsed) {
     }
     part2 = part2.trim().slice(1, -1);
     commandParsed.part2 = part2;
+    const groups = commandParsed.part1.match(/curl.*?["'](.*?)["']/);
+    const extra = {
+        url: groups ? groups[1] : ""
+    };
+    commandParsed.extra = extra;
 }
 
 // powerShell格式
@@ -260,6 +259,11 @@ function powerShellParser(command, commandParsed) {
     }
     part2 = part2.trim().slice(1, -1);
     commandParsed.part2 = part2;
+    const groups = commandParsed.part1.match(/Invoke-WebRequest.*?["'](.*?)["']/);
+    const extra = {
+        url: groups ? groups[1] : ""
+    };
+    commandParsed.extra = extra;
 }
 
 function fetchParser(command, commandParsed) {
@@ -375,12 +379,12 @@ function generate() {
         }
     }
     _params = _params.slice(0, -1);
+    commandParsed.extra._params = _params;
     if (commandParsed.type === TYPE3) {
         newCommand.value = `fetch('${commandParsed.part1}', ${JSON.stringify({
             ...commandParsed.extra.options,
             body: _params
         })});`;
-        commandParsed.extra._params = _params;
         executable.value = true;
     }
     else {
@@ -394,6 +398,8 @@ function generate() {
 function copy() {
     if (newCommand.value) {
         navigator.clipboard.writeText(newCommand.value);
+        const message = `copy:command:${commandParsed.type};${commandParsed.extra.url || "-"};${decodeURIComponent(commandParsed.extra._params)}`;
+        getLogger()(message);
         window.alert("复制成功");
     }
 }
@@ -412,12 +418,15 @@ async function execute() {
         body: commandParsed.extra._params
     });
     info2Execute.status_code = resp.status;
+    let message = `execute:command:${commandParsed.type};${commandParsed.extra.url || "-"};${decodeURIComponent(commandParsed.extra._params)}`;
     try {
+        message += ";ok"
         const respData = await resp.json();
         Object.assign(info2Execute, respData);
     }
     catch (error) {
         console.log(error);
+        message += ";error"
         try {
             const respData = await resp.text();
             info2Execute.respText = respData;
@@ -429,6 +438,7 @@ async function execute() {
     }
     finally {
         executeDialogVisible.value = true;
+        getLogger()(message);
     }
 }
 
@@ -442,6 +452,7 @@ function clear() {
     if (command.value) {
         command.value = "";
     }
+    newAmount.value && (newAmount.value = "");
     executable.value && (executable.value = false);
 }
 </script>

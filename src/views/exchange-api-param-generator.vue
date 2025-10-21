@@ -194,10 +194,10 @@ async function refresh(force) {
             localStorage.setItem("loggedKey", date.getTime());
         }
     }
-    let message = `refresh:data:${force}`;
+    let message = `refresh;force:${force}`;
     try {
         await queryExchangeDataConfig(force, client);
-        message += `;cache:${config.cacheHit}`;
+        message += `;useCache:${config.cacheHit}`;
         await queryExchangeData({
             ...config
         });

@@ -15,6 +15,7 @@ export function useGetExchangeDataConfig() {
                 const expiration = +_config.expiration;
                 if (expiration > now) {
                     Object.assign(config, _config);
+                    config.cacheHit = true;
                     return;
                 }
             }
@@ -28,6 +29,7 @@ export function useGetExchangeDataConfig() {
         localStorage.setItem("exchange-data-config", JSON.stringify(config));
         // 不记录该变量在本地存储中
         config.force = true;
+        config.cacheHit = false;
     }
 
     return { config, queryExchangeDataConfig };

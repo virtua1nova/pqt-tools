@@ -142,7 +142,7 @@ function log(level, message) {
     const date = new Date();
     const logItem = `[${date.toLocaleString()}] - ${level} - ${message}`;
     if (logInfo) {
-        logInfo += `; ${logItem}`
+        logInfo += `;${logItem}`
     }
     else {
         logInfo = logItem;
@@ -194,20 +194,27 @@ async function refresh(force) {
             localStorage.setItem("loggedKey", date.getTime());
         }
     }
+    let message = `refresh:data:${force}`;
     try {
         await queryExchangeDataConfig(force, client);
+        message += `;cache:${config.cacheHit}`;
         await queryExchangeData({
             ...config
         });
         dialogError.value && (dialogError.value = "");
-        clearLog && clearLog();
+        if (!config.cacheHit) {
+            clearLog && clearLog();
+        }
     }
     catch (error) {
-        console.log("拉取数据失败");
+        const errorMessage = "拉取数据失败";
+        console.log(errorMessage);
         console.log(error);
-        dialogError.value = "拉取数据失败, 请检查网络或联系管理员";
+        dialogError.value = `${errorMessage}, 请检查网络或联系管理员`;
+        message += `;error:${error.message || errorMessage}`
     }
     finally {
+        getLogger()(message);
         loading.value = false;
     }
 }
@@ -431,7 +438,7 @@ async function execute() {
     }
     catch (error) {
         console.log(error);
-        message += ";error"
+        message += `;error:${error.message || "-"}`;
         try {
             const respData = await resp.text();
             info2Execute.respText = respData;

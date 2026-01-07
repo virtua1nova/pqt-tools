@@ -51,13 +51,7 @@ export function useGetExchangeData() {
             extraData = exchangeData.extraData;
             Object.assign(spreadsheetSource, exchangeData.source);
         }
-        // const imageFields = extraData.imageFields || [];
         fields.value = Object.keys(raw[0]);
-        // const map = {};
-        // for (const item of imageFields) {
-        //     map[item] = 1;
-        // }
-
         for (let i=0; i<raw.length; i++) {
             const rawItem = raw[i];
             for (const field of fields.value) {

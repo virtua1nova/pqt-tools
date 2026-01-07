@@ -142,11 +142,10 @@ function log(level, message) {
     const date = new Date();
     const logItem = `[${date.toLocaleString()}] - ${level} - ${message}`;
     if (logInfo) {
-        logInfo += `;${logItem}`
+        logInfo += `;${logItem}`;
     }
     else {
         logInfo = logItem;
-
     }
     localStorage.setItem("log_info", logInfo);
 }
@@ -177,14 +176,13 @@ async function refresh(force) {
         list.value.length = 0;
     }
     loading.value = true;
-    // 一天最多记录一次
     const loggedKey = localStorage.getItem("loggedKey");
     const validTime = loggedKey ? parseInt(loggedKey) : 0;
     let client = "";
     const date = new Date();
     const now = date.getTime();
     let clearLog;
-    if (validTime < now) {
+    if (force || validTime < now) {
         const { clearLog: a, ...clientInfo } = getClientInfo();
         clearLog = a;
         if (clientInfo.log) {

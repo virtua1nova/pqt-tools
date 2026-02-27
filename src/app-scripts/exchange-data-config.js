@@ -2,24 +2,16 @@
 // 返回sheetId和sheetName
 function doGet(request = {}) {
   let client = request.parameter?.client;
+  let withoutData = request.parameter?.withoutData;
   const config = readJsonFromDrive();
   try {
     if (client) {
       client = JSON.parse(client);
       const logConfig = config.log;
-      const ss = SpreadsheetApp.openById(logConfig.sheetId);
-      const sheet = ss.getActiveSheet();
-      if (sheet.getLastRow() === 0) {
-        sheet.getRange('A1:D1').setValues([[
-          '时间', 'userAgent', '消息', ""
-        ]]);
-      }
-      sheet.appendRow([
-        new Date().toISOString(),
-        client.userAgent || "-",
-        client.log || "-",
-        ""
-      ]);
+      log(logConfig.sheetId, client);
+    }
+    if (withoutData === '1') {
+      return output({ message: "ok" });
     }
   }
   catch (error) {
@@ -43,6 +35,22 @@ function output(respData) {
   const output = ContentService.createTextOutput(JSON.stringify(respData));
   output.setMimeType(ContentService.MimeType.JSON);
   return output;
+}
+
+function log(sheetId, client) {
+  const ss = SpreadsheetApp.openById(sheetId);
+  const sheet = ss.getActiveSheet();
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange('A1:D1').setValues([[
+      '时间', 'userAgent', '消息', ""
+    ]]);
+  }
+  sheet.appendRow([
+    new Date().toISOString(),
+    client.userAgent || "-",
+    client.log || "-",
+    ""
+  ]);
 }
 
 

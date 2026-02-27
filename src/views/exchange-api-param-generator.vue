@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import { useGetExchangeData } from "../composables/exchange-data";
 import { useGetExchangeDataConfig } from "../composables/exchange-data-config";
 import SimpleDialog from "../components/SimpleDialog.vue";
@@ -108,6 +108,26 @@ const { list, queryExchangeData, spreadsheetSource } = useGetExchangeData();
 const info2Execute = reactive({
     message: ""
 });
+
+onMounted(() => {
+    report();
+});
+
+// 上报日志；
+// 很多时候，都不需要参数对照，因为抓包数据已经包含了全部，所以留在本地的日志未能上报至服务器；
+// 静默方式
+function report() {
+    const log = getLog(false);
+    try {
+        if (log.client) {
+            queryExchangeDataConfig(false, log.client);
+            log.clearLog && log.clearLog();
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
 const descriptions = [
     "如果没有看到想要的兑换参数的话, 可前往在线表格帮忙填写",
@@ -171,11 +191,7 @@ function getClientInfo() {
     return clientInfo;
 }
 
-async function refresh(force) {
-    if (list.value.length) {
-        list.value.length = 0;
-    }
-    loading.value = true;
+function getLog(force) {
     const loggedKey = localStorage.getItem("loggedKey");
     const validTime = loggedKey ? parseInt(loggedKey) : 0;
     let client = "";
@@ -192,6 +208,19 @@ async function refresh(force) {
             localStorage.setItem("loggedKey", date.getTime());
         }
     }
+
+    return {
+        client,
+        clearLog
+    };
+}
+
+async function refresh(force) {
+    if (list.value.length) {
+        list.value.length = 0;
+    }
+    loading.value = true;
+    let { client, clearLog } = getLog(force);
     let message = `refresh;force:${force}`;
     try {
         await queryExchangeDataConfig(force, client);
@@ -316,6 +345,7 @@ function parse() {
     if (!commandParsed.part1 || !commandParsed.part2) {
         return window.alert('解析失败, 参数格式是否正确?');
     }
+    getLogger()(`parse:${JSON.stringify(commandParsed)}`);
     const params = commandParsed.part2.split("&");
     params.sort();
     const map = {};

@@ -120,7 +120,7 @@ function report() {
     const log = getLog(false);
     try {
         if (log.client) {
-            queryExchangeDataConfig(true, log.client);
+            queryExchangeDataConfig(false, log.client);
             log.clearLog && log.clearLog();
         }
     }

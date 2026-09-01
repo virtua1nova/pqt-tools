@@ -56,4 +56,15 @@ import ToolingIcon from './icons/IconTooling.vue'
       虽然收益已经被拦腰斩，但也好过没有，蚊子腿也是肉.jpg(策划飞马)。
     </div>
   </Tool>
+  <Tool>
+    <template #icon>
+      <ToolingIcon />
+    </template>
+    <template #heading>
+      <a href="https://github.com/errr0l/QTBot" target="_blank">五、QTBot</a>
+    </template>
+    <div style="text-indent: 2em;">
+      运行于qq平台的机器人，可用于查询角色技能信息。
+    </div>
+  </Tool>
 </template>

@@ -2,7 +2,7 @@
     <div class="container1">
         <p style="margin-bottom: 10px; font-size: 18px; font-weight: 500;">兑换参数转换器</p>
         <div style="margin-bottom: 5px; color: rgb(133, 84, 84); font-size: 14px;">基本使用方法: 解析 -> 生成 -> 复制 -> 粘贴[到终端] -> 执行</div>
-        <div style="margin-bottom: 5px; color: red; font-size: 12px;">注: 生成的命令不要直接复制, 而应该点击[复制]按钮, 否则会因换行符没复制出来, 导致命令执行失败</div>
+        <div style="margin-bottom: 5px; color: red; font-size: 12px;">注: 生成的命令不要直接复制, 而应该点击[复制]按钮, 否则会无法复制因某些符号, 导致命令执行失败</div>
         <div style="margin-bottom: 5px">
             <div style="margin-bottom: 5px;">
                 <label for="command" style="display: inline-block; margin-bottom: 5px;">
@@ -120,7 +120,7 @@ function report() {
     const log = getLog(false);
     try {
         if (log.client) {
-            queryExchangeDataConfig(false, log.client);
+            queryExchangeDataConfig(true, log.client);
             log.clearLog && log.clearLog();
         }
     }
